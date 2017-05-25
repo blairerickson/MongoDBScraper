@@ -54,18 +54,28 @@ app.get("/scrape", function(req, res) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     var $ = cheerio.load(html);
     // Now, we grab every h2 within an article tag, and do the following:
-    $("article h2").each(function(i, element) {
 
-      // Save an empty result object
-      var result = {};
 
-      // Add the text and href of every link, and save them as properties of the result object
-      result.title = $(this).children("a").text();
-      result.link = $(this).children("a").attr("href");
+  // An empty array to save the data that we'll scrape
+  var resultObject = {};
 
+  // With cheerio, find each p-tag with the "title" class
+  // (i: iterator. element: the current element)
+  $("p.title").each(function(i, element) {
+
+    // Save the text of the element (this) in a "title" variable
+    resultObject.title = $(this).text();
+
+    // In the currently selected element, look at its child elements (i.e., its a-tags),
+    // then save the values for any "href" attributes that the child elements may have
+    resultObject.link = $(element).children().attr("href");
+
+    console.log("Prepping result save...")
+
+    // Save these results in an object that we'll push into the result array we defined earlier
       // Using our Article model, create a new entry
       // This effectively passes the result object to the entry (and the title and link)
-      var entry = new Article(result);
+      var entry = new Article(resultObject);
 
       // Now, save that entry to the db
       entry.save(function(err, doc) {
@@ -77,9 +87,47 @@ app.get("/scrape", function(req, res) {
         else {
           console.log(doc);
         }
-      });
 
-    });
+            console.log("================")
+
+    console.log("Here is resultobject:" + resultObject)
+
+      });
+   
+
+
+  });
+
+
+
+    // $("article h2").each(function(i, element) {
+
+    //   // Save an empty result object
+    //   var result = {};
+
+    //   // Add the text and href of every link, and save them as properties of the result object
+    //   result.title = $(this).children("a").text();
+    //   result.link = $(this).children("a").attr("href");
+
+    //   // Using our Article model, create a new entry
+    //   // This effectively passes the result object to the entry (and the title and link)
+    //   var entry = new Article(result);
+
+    //   // Now, save that entry to the db
+    //   entry.save(function(err, doc) {
+    //     // Log any errors
+    //     if (err) {
+    //       console.log(err);
+    //     }
+    //     // Or log the doc
+    //     else {
+    //       console.log(doc);
+    //     }
+    //   });
+    // });
+
+
+
   });
   // Tell the browser that we finished scraping the text
   res.send("Scrape Complete");
