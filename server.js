@@ -202,6 +202,6 @@ app.post("/articles/:id", function(req, res) {
 
 
 // Listen on port 27017
-app.listen(process.env.PORT || 5000) {
-  console.log("App running on " + process.env.PORT);
+app.listen(process.env.PORT, function() {
+  console.log("App running on port" + process.env.PORT);
 });
