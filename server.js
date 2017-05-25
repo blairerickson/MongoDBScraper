@@ -29,8 +29,10 @@ app.use(bodyParser.urlencoded({
 // Make public a static dir
 app.use(express.static("public"));
 
+var monURI = "mongodb://heroku_f47zlsmm:4fdg0vog1n5nin264arj5fn0mr@ds151951.mlab.com:51951/heroku_f47zlsmm";
+
 // Database configuration with mongoose
-mongoose.connect("mongodb://heroku_f47zlsmm:4fdg0vog1n5nin264arj5fn0mr@ds151951.mlab.com:51951/heroku_f47zlsmm");
+mongoose.connect(monURI);
 var db = mongoose.connection;
 
 // Show any mongoose errors
