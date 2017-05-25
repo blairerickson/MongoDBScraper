@@ -55,15 +55,21 @@ app.get("/scrape", function(req, res) {
   request("http://www.reddit.com/r/StarWars", function(error, response, html) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     var $ = cheerio.load(html);
-    // Now, we grab every h2 within an article tag, and do the following:
 
+            console.log("HERE IS $ ----------- " + $);
 
-  // An empty array to save the data that we'll scrape
   var resultObject = {};
+
+  $("div.thing").each(function(i, element) {
+
+    resultObject.dataURL = $(element).attr("data-url");
+        console.log("SCRAPED ----------- LINK" + resultObject.link);
+  });
 
   // With cheerio, find each p-tag with the "title" class
   // (i: iterator. element: the current element)
   $("p.title").each(function(i, element) {
+
 
     // Save the text of the element (this) in a "title" variable
     resultObject.title = $(this).text();
@@ -72,7 +78,8 @@ app.get("/scrape", function(req, res) {
     // then save the values for any "href" attributes that the child elements may have
     resultObject.link = $(element).children().attr("href");
 
-    console.log("Prepping result save...")
+
+    // console.log("HERE IS WHAT HAS ARRIVED: " + element.children);
 
     // Save these results in an object that we'll push into the result array we defined earlier
       // Using our Article model, create a new entry
@@ -87,12 +94,12 @@ app.get("/scrape", function(req, res) {
         }
         // Or log the doc
         else {
-          console.log(doc);
+          console.log("logged.");
         }
 
-            console.log("================")
+            // console.log("================")
 
-    console.log("Here is resultobject:" + resultObject)
+    // console.log("Here is resultobject:" + resultObject)
 
       });
    
